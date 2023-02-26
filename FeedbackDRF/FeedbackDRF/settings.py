@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # install
+    'rest_framework',
+
     # app
     'feedbackapp',
 ]

@@ -13,38 +13,61 @@
 	<div class="container my-5">
 		
 
-	<form id="feedbackForm" class="px-5">
-		<h1 class="fw-bold">How are we doing?</h1>
-		<p>Please send us your feedback.</p>
-		<div class="mb-3">
-		    <label for="inputEmail" class="form-label">Email Address: </label>
-		    <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
-		  </div>
-		  <div class="mb-3">
-		    <label for="textInput" class="form-label">Message: </label>
-		    <textarea class="form-control" id="textInput" style="height: 100px"></textarea>
-		  </div>
-		<button type="submit" class="btn btn-dark rounded-1">
-			Submit
-		</button>
-	</form>
+		<form id="feedbackForm" class="px-5">
+			<h1 class="fw-bold">How are we doing?</h1>
+			<p>Please send us your feedback.</p>
+			{% csrf_token %}
+			<div class="mb-3">
+				<label for="inputEmail" class="form-label">Email Address: </label>
+				<input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" name="email" required>
+			</div>
+			<div class="mb-3">
+				<label for="textInput" class="form-label">Message: </label>
+				<textarea class="form-control" id="textInput" name="message" style="height: 100px" required></textarea>
+			</div>
+			<button type="submit" class="btn btn-dark rounded-1">
+				Submit
+			</button>
+		</form>
 
-	<div class="px-5 " id="thankText">
-		<h1 class="fw-bold">Thank You!</h1>
-		<p>Your feedback has been recorded.</p>
-		<p>If you have more to say, you can <a href="{% url 'home' %}" class="text-danger">submit another feedback</a> response.</p>
+		<div class="px-5 " id="thankText" style="display: none;">
+			<h1 class="fw-bold">Thank You!</h1>
+			<p>Your feedback has been recorded.</p>
+			<p>If you have more to say, you can <a href="{% url 'home' %}" class="text-danger">submit another feedback</a> response.</p>
+		</div>
 	</div>
-</div>
 
 
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
 	<!-- <script src="{% static 'index.js' %}"></script> -->
-	<script type="text/javascript">
-		$( document ).ready(function() {
-		     alert('Working')
-		});
-	</script>
-</body>
-</html>
+<script type="text/javascript">
+$( document ).ready(function() {
+
+	$("#thankText").css("display", "none");
+
+	$("#feedbackForm").submit(function(ev) {
+		event.preventDefault();	
+		var form = $("#feedbackForm");
+		var formData = form.serialize();
+		  $.ajax({
+                type: "POST",
+                url: "{% url 'feedback_create' %}",
+                data: form.serialize(),
+                success: function(data) {
+                	$("#feedbackForm").css("display", "none");
+                    $("#thankText").css("display", "block");
+                    
+                },
+                error: function(data) {
+                    alert(data);
+                }
+            });
+	});
+
+});
+</script>
+	</body>
+	</html>
